@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TeacherModule } from './teacher/teacher.module';
+import { JwtStrategy } from './security/jwt.strategy';
+import { TeacherModule } from './modules/teacher/teacher.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -17,9 +19,13 @@ import { TeacherModule } from './teacher/teacher.module';
       synchronize: false,
       autoLoadEntities: true,
     }),
+    JwtModule.register({
+      secret: 'sadkljflkajdfasjf',
+      signOptions: { expiresIn: '4h' },
+    }),
     TeacherModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}

@@ -9,6 +9,12 @@ export class TeacherInfoItem {
     example: '13347872678',
   })
   phone: string;
+
+  @ApiProperty({
+    description: '角色',
+    example: 'teacher',
+  })
+  role: string;
 }
 
 export class TeacherInfoVo {

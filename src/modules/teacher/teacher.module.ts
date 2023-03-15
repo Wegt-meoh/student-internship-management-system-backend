@@ -4,17 +4,16 @@ import { TeacherController } from './teacher.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Teacher } from './entities/teacher.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Teacher]),
     JwtModule.register({
       secret: 'sadkljflkajdfasjf',
-      signOptions: { expiresIn: '24h' },
+      signOptions: { expiresIn: '4h' },
     }),
   ],
   controllers: [TeacherController],
-  providers: [TeacherService, JwtStrategy],
+  providers: [TeacherService],
 })
 export class TeacherModule {}

@@ -30,7 +30,7 @@ export class TeacherService {
     await this.teacherRepository.delete(id);
   }
 
-  async register(registerDto: RegisterDto): Promise<any> {
+  async register(registerDto: RegisterDto) {
     await this.checkRegisterForm(registerDto);
 
     const { name, password, phone } = registerDto;
@@ -41,12 +41,12 @@ export class TeacherService {
     newTeacher.phone = phone;
     newTeacher.password = hashPassword;
     newTeacher.salt = salt;
-    return await this.teacherRepository.save(newTeacher);
+    await this.teacherRepository.save(newTeacher);
   }
 
   async checkRegisterForm(registerDto: RegisterDto): Promise<any> {
     if (registerDto.password !== registerDto.passwordRepeat) {
-      throw new NotFoundException('两次输入密码不一致');
+      throw new BadRequestException('两次输入密码不一致');
     }
     const { phone } = registerDto;
     const isExistUser = await this.teacherRepository.findOneBy({ phone });
@@ -55,7 +55,7 @@ export class TeacherService {
     }
   }
 
-  async checkLoginForm(loginDto: LoginDto): Promise<any> {
+  async checkLoginForm(loginDto: LoginDto) {
     const { phone, password } = loginDto;
     const teacher = await this.teacherRepository
       .createQueryBuilder('teacher')
@@ -82,10 +82,11 @@ export class TeacherService {
       id: teacher.id,
       name: teacher.name,
       phone: teacher.phone,
+      role: 'teacher',
     });
   }
 
-  async login(loginDto: LoginDto): Promise<any> {
+  async login(loginDto: LoginDto) {
     const teacher = await this.checkLoginForm(loginDto);
     const token = await this.createToken(teacher);
     return {
