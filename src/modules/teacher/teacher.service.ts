@@ -90,7 +90,8 @@ export class TeacherService {
     const teacher = await this.checkLoginForm(loginDto);
     const token = await this.createToken(teacher);
     return {
-      info: { token },
+      token,
+      role: 'teacher',
     };
   }
 }
