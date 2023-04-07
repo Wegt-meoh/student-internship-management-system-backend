@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, isNotEmpty, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 import { regMobileCN } from 'src/utils/reg';
 
 export class RegisterDto {
@@ -15,6 +15,11 @@ export class RegisterDto {
   @IsNotEmpty({ message: '请输入姓名' })
   @IsString({ message: '请输入正确的姓名' })
   readonly name: string;
+
+  @ApiProperty({ description: '院系', example: '机械与电气工程学院' })
+  @IsNotEmpty({ message: '请输入院系' })
+  @IsString({ message: '请输入正确的院系' })
+  readonly facuties: string;
 
   @ApiProperty({
     description: '用户密码',

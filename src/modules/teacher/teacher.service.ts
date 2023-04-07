@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,8 @@ import { RegisterDto } from './dto/register.dto';
 import { Teacher } from './entities/teacher.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { TokenDecodeInfo } from './vo/token-decode.vo';
+import { TeacherInfoItem, TeacherInfoVo } from './vo/teacher-info.vo';
 
 @Injectable()
 export class TeacherService {
@@ -18,12 +21,12 @@ export class TeacherService {
     private jwtSerice: JwtService,
   ) {}
 
-  findAll(): Promise<Teacher[]> {
-    return this.teacherRepository.find();
+  async findAll() {
+    return await this.teacherRepository.find();
   }
 
-  findOne(id: number): Promise<Teacher> {
-    return this.teacherRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Teacher | null> {
+    return await this.teacherRepository.findOneBy({ id });
   }
 
   async remove(id: string): Promise<void> {
@@ -44,7 +47,7 @@ export class TeacherService {
     await this.teacherRepository.save(newTeacher);
   }
 
-  async checkRegisterForm(registerDto: RegisterDto): Promise<any> {
+  async checkRegisterForm(registerDto: RegisterDto) {
     if (registerDto.password !== registerDto.passwordRepeat) {
       throw new BadRequestException('两次输入密码不一致');
     }
@@ -83,6 +86,7 @@ export class TeacherService {
       name: teacher.name,
       phone: teacher.phone,
       role: 'teacher',
+      facuties: teacher.facuties,
     });
   }
 
@@ -90,8 +94,45 @@ export class TeacherService {
     const teacher = await this.checkLoginForm(loginDto);
     const token = await this.createToken(teacher);
     return {
-      token,
-      role: 'teacher',
+      statusCode: 201,
+      data: {
+        info: {
+          token: token,
+          name: teacher.name,
+          facuties: teacher.facuties,
+          role: 'teacher',
+        },
+      },
+
+      message: '登入成功',
     };
+  }
+
+  async getInfoById(id: number): Promise<TeacherInfoVo> {
+    const teacher = await this.teacherRepository.findOneBy({ id });
+    return {
+      info: {
+        phone: teacher.phone,
+        name: teacher.name,
+        facuties: teacher.facuties,
+      },
+    };
+  }
+
+  async getInfoByToken(token: string) {
+    const result = this.jwtSerice.decode(token);
+
+    if (
+      result === null ||
+      typeof result === 'string' ||
+      typeof result.id !== 'number'
+    ) {
+      throw new BadRequestException({
+        statusCode: 301,
+        message: 'token错误，请重新登入',
+      });
+    }
+
+    return await this.getInfoById(result.id);
   }
 }

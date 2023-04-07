@@ -12,4 +12,6 @@ export class Teacher {
   password: string;
   @Column('varchar')
   salt: string;
+  @Column('char')
+  facuties: string;
 }

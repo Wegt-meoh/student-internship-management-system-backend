@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BasicResponseVo } from 'src/vo/basicRqestResponse.vo';
 
 export class TeacherInfoItem {
-  @ApiProperty({ description: '教师id', example: 1 })
-  id: number;
-
   @ApiProperty({
     description: '手机号',
     example: '13347872678',
@@ -11,10 +9,16 @@ export class TeacherInfoItem {
   phone: string;
 
   @ApiProperty({
-    description: '角色',
-    example: 'teacher',
+    description: '姓名',
+    example: '张三',
   })
-  role: string;
+  name: string;
+
+  @ApiProperty({
+    description: '院系',
+    example: '机械与电气工程学院',
+  })
+  facuties: string;
 }
 
 export class TeacherInfoVo {
@@ -22,17 +26,11 @@ export class TeacherInfoVo {
   info: TeacherInfoItem;
 }
 
-export class TeacherInfoResponse {
-  @ApiProperty({ description: '状态码', example: 200 })
-  code: number;
-
+export class TeacherInfoResponse extends BasicResponseVo {
   @ApiProperty({
     description: '返回数据',
     type: () => TeacherInfoVo,
     example: TeacherInfoVo,
   })
   data: TeacherInfoVo;
-
-  @ApiProperty({ description: '请求结果消息', example: '请求成功' })
-  message: string;
 }

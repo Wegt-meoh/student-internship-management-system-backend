@@ -4,6 +4,7 @@ import { TeacherController } from './teacher.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Teacher } from './entities/teacher.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './security/jwt.strategy';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [TeacherController],
-  providers: [TeacherService],
+  providers: [TeacherService, JwtStrategy],
 })
 export class TeacherModule {}
