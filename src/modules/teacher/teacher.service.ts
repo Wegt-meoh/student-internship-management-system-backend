@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { encryptPassword, makeSalt } from 'src/utils/cryptogram.util';
 import { Repository } from 'typeorm';
@@ -11,8 +6,7 @@ import { RegisterDto } from './dto/register.dto';
 import { Teacher } from './entities/teacher.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-import { TokenDecodeInfo } from './vo/token-decode.vo';
-import { TeacherInfoItem, TeacherInfoVo } from './vo/teacher-info.vo';
+import { TeacherInfoVo } from './vo/teacher-info.vo';
 
 @Injectable()
 export class TeacherService {
@@ -36,7 +30,7 @@ export class TeacherService {
   async register(registerDto: RegisterDto) {
     await this.checkRegisterForm(registerDto);
 
-    const { name, password, phone } = registerDto;
+    const { name, password, phone, facuties } = registerDto;
     const salt = makeSalt();
     const hashPassword = encryptPassword(password, salt);
     const newTeacher = new Teacher();
@@ -44,6 +38,8 @@ export class TeacherService {
     newTeacher.phone = phone;
     newTeacher.password = hashPassword;
     newTeacher.salt = salt;
+    newTeacher.facuties = facuties;
+
     await this.teacherRepository.save(newTeacher);
   }
 

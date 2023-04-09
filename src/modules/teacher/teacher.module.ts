@@ -5,13 +5,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Teacher } from './entities/teacher.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './security/jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([Teacher]),
-    JwtModule.register({
-      secret: 'sadkljflkajdfasjf',
-      signOptions: { expiresIn: '4h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get('JWT_SECRET'),
+          signOptions: { expiresIn: '4h' },
+        };
+      },
     }),
   ],
   controllers: [TeacherController],

@@ -32,12 +32,12 @@ import { Request } from 'express';
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
+  @Post('register')
   @ApiBody({ type: RegisterDto })
   @ApiOkResponse({
     description: '注册',
     type: BasicResponseVo,
   })
-  @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     await this.teacherService.register(registerDto);
     return {
@@ -58,9 +58,9 @@ export class TeacherController {
   }
 
   @Get('info')
-  @ApiOkResponse({ description: '获取教师信息', type: TeacherInfoResponse })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
+  @ApiOkResponse({ description: '获取教师信息', type: TeacherInfoResponse })
   @ApiBadRequestResponse({
     description: '获取信息失败',
     type: BadRequestResponseVo,
@@ -68,7 +68,6 @@ export class TeacherController {
   async info(@Req() req: Request): Promise<TeacherInfoResponse> {
     const token = extractTokenFromAuthorization(req.headers.authorization);
     if (!token) {
-      console.log(token);
       throw new BadRequestException('token error');
     }
 
