@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TeacherModule } from './modules/teacher/teacher.module';
 import { configValidationSchema } from './config.schema';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
@@ -31,7 +30,6 @@ import { UserModule } from './modules/user/user.module';
         };
       },
     }),
-    TeacherModule,
     AuthModule,
     UserModule,
   ],

@@ -4,14 +4,48 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
+import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { Teacher } from './entities/teacher.entity';
+import { Student } from './entities/student.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
+    @InjectRepository(Student) private studentRepository: Repository<Student>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async createTeacher(createTeacherDto: CreateTeacherDto) {
+    const user = await this.createUser(createTeacherDto);
+
+    const teacher = new Teacher();
+    teacher.facuties = createTeacherDto.facuties;
+    teacher.user = user;
+
+    await this.teacherRepository.save(teacher);
+
+    return {
+      message: '注册教师成功',
+    };
+  }
+
+  async createStudentDto(createStudentDto: CreateStudentDto) {
+    const user = await this.createUser(createStudentDto);
+
+    const student = new Student();
+    student.class = createStudentDto.class;
+    student.user = user;
+
+    await this.studentRepository.save(student);
+
+    return {
+      message: '注册学生成功',
+    };
+  }
+
+  async createUser(createUserDto: CreateUserDto) {
     const exist = await this.findOne(createUserDto.phone);
     if (exist) {
       throw new BadRequestException('电话号码已注册');
@@ -22,7 +56,8 @@ export class UserService {
     user.phone = createUserDto.phone;
     user.password = await bcrypt.hash(createUserDto.password, 10);
     user.role = createUserDto.role;
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    return user;
   }
 
   async findOne(phone: string) {
