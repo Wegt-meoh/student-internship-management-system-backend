@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TeacherModule } from './modules/teacher/teacher.module';
 import { configValidationSchema } from './config.schema';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -24,12 +26,14 @@ import { configValidationSchema } from './config.schema';
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
           entities: [],
-          synchronize: false,
+          synchronize: true,
           autoLoadEntities: true,
         };
       },
     }),
     TeacherModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
