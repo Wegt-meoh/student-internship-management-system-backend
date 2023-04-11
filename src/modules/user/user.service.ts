@@ -8,6 +8,12 @@ import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { Teacher } from './entities/teacher.entity';
 import { Student } from './entities/student.entity';
+import {
+  FindAllStudentResponseVo,
+  FindAllTeacherResponseVo,
+  StudentResponseDataItem,
+  TeacherResponseDataItem,
+} from './vo/findAll-response.vo';
 
 @Injectable()
 export class UserService {
@@ -16,6 +22,42 @@ export class UserService {
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(Student) private studentRepository: Repository<Student>,
   ) {}
+
+  async findAllTeacher(): Promise<FindAllTeacherResponseVo> {
+    const teacherList = await this.teacherRepository.find({
+      relations: ['user'],
+    });
+
+    return {
+      data: teacherList.map((teacher) => {
+        const teacherResponseItem = new TeacherResponseDataItem();
+        teacherResponseItem.id = teacher.user.id;
+        teacherResponseItem.facuties = teacher.facuties;
+        teacherResponseItem.name = teacher.user.name;
+        teacherResponseItem.phone = teacher.user.phone;
+        teacherResponseItem.role = teacher.user.role;
+        return teacherResponseItem;
+      }),
+    };
+  }
+
+  async findAllStudent(): Promise<FindAllStudentResponseVo> {
+    const studentList = await this.studentRepository.find({
+      relations: ['user'],
+    });
+
+    return {
+      data: studentList.map((student) => {
+        const studentResponseItem = new StudentResponseDataItem();
+        studentResponseItem.id = student.user.id;
+        studentResponseItem.class = student.class;
+        studentResponseItem.name = student.user.name;
+        studentResponseItem.phone = student.user.phone;
+        studentResponseItem.role = student.user.role;
+        return studentResponseItem;
+      }),
+    };
+  }
 
   async createTeacher(createTeacherDto: CreateTeacherDto) {
     const user = await this.createUser(createTeacherDto);
