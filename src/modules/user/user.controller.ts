@@ -4,17 +4,21 @@ import {
   Controller,
   Get,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterResponseVo } from './vo/register-response.vo';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { RoleEnum } from './role.enum';
+import { RoleEnum } from '../auth/enums/role.enum';
 import { CreateStudentDto } from './dto/create-student.dto';
 import {
   FindAllStudentResponseVo,
   FindAllTeacherResponseVo,
 } from './vo/findAll-response.vo';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -56,6 +60,9 @@ export class UserController {
   @ApiOkResponse({
     type: () => FindAllTeacherResponseVo,
   })
+  @ApiBearerAuth()
+  @Roles(RoleEnum.STUDENT)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Get('/teacher/findAll')
   findAllTeacher() {
     return this.userService.findAllTeacher();

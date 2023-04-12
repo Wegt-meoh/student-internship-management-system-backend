@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RoleEnum } from '../role.enum';
+import { RoleEnum } from '../../auth/enums/role.enum';
 
 export class BasicDataItem {
   @ApiProperty({
