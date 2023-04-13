@@ -9,16 +9,19 @@ import {
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterResponseVo } from './vo/register-response.vo';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { RoleEnum } from '../auth/enums/role.enum';
-import { CreateStudentDto } from './dto/create-student.dto';
+import { RoleEnum } from '../../enums/role.enum';
 import {
   FindAllStudentResponseVo,
   FindAllTeacherResponseVo,
 } from './vo/findAll-response.vo';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/guards/role.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { CreateStudentDto, CreateTeacherDto } from './dto/create-user.dto';
+import {
+  StudentInfoResponseVo,
+  TeacherInfoResponseVo,
+} from './vo/info-response.vo';
+import { RolesGuard } from 'src/guards/role.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -62,9 +65,31 @@ export class UserController {
   })
   @ApiBearerAuth()
   @Roles(RoleEnum.STUDENT)
-  @UseGuards(AuthGuard(), RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/teacher/findAll')
   findAllTeacher() {
     return this.userService.findAllTeacher();
+  }
+
+  @ApiOkResponse({
+    type: () => TeacherInfoResponseVo,
+  })
+  @ApiBearerAuth()
+  @Roles(RoleEnum.TEACHER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/teacher/info')
+  teacherInfo() {
+    return 'get teacher info';
+  }
+
+  @ApiOkResponse({
+    type: () => StudentInfoResponseVo,
+  })
+  @ApiBearerAuth()
+  @Roles(RoleEnum.STUDENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/student/info')
+  studentInfo() {
+    return 'get student info';
   }
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RoleEnum } from '../../auth/enums/role.enum';
+import { RoleEnum } from '../../../enums/role.enum';
 
-export class BasicDataItem {
+class UserDataItem {
   @ApiProperty({
     name: 'phone',
     example: '18787878787',
@@ -27,7 +27,7 @@ export class BasicDataItem {
   name: string;
 }
 
-export class StudentResponseDataItem extends BasicDataItem {
+export class StudentResponseDataItem extends UserDataItem {
   @ApiProperty({
     name: 'class',
     example: '计算机192',
@@ -35,7 +35,7 @@ export class StudentResponseDataItem extends BasicDataItem {
   class: string;
 }
 
-export class TeacherResponseDataItem extends BasicDataItem {
+export class TeacherResponseDataItem extends UserDataItem {
   @ApiProperty({
     name: 'facuties',
     example: '机械与电气工程学院',

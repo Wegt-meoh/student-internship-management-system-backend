@@ -1,11 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import {
+  CreateStudentDto,
+  CreateTeacherDto,
+  CreateUserDto,
+} from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { CreateStudentDto } from './dto/create-student.dto';
 import { Teacher } from './entities/teacher.entity';
 import { Student } from './entities/student.entity';
 import {
