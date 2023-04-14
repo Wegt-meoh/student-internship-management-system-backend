@@ -4,19 +4,16 @@ import {
   Controller,
   Get,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
-import { ApiOkResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
-import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/enums/role.enum';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/guards/role.guard';
 import { CreateTeacherDto } from './dto/create-user.dto';
 import { FindAllTeacherResponseVo } from './vo/findAll-response.vo';
 import { TeacherInfoResponseVo } from './vo/info-response.vo';
 import { RegisterResponseVo } from './vo/register-response.vo';
+import { Auth } from 'src/decorators/auth.decorator';
 
 @ApiTags('Teacher')
 @Controller('teacher')
@@ -48,9 +45,7 @@ export class TeacherController {
   @ApiOkResponse({
     type: () => TeacherInfoResponseVo,
   })
-  @ApiBearerAuth()
-  @Roles(RoleEnum.TEACHER)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Auth(RoleEnum.TEACHER)
   @Get('/teacher/info')
   teacherInfo(@GetUser('phone') phone: string): Promise<TeacherInfoResponseVo> {
     return this.teacherService.getTeacherInfo(phone);
