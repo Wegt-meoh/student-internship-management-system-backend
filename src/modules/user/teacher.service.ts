@@ -4,12 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Teacher } from './entities/teacher.entity';
 import { Repository } from 'typeorm';
 import { CreateTeacherDto } from './dto/create-user.dto';
-import {
-  FindAllTeacherResponseVo,
-  TeacherResponseDataItem,
-} from './vo/findAll-response.vo';
+import { FindAllTeacherResponseVo } from './vo/findAll-response.vo';
 import { TeacherInfoResponseVo } from './vo/info-response.vo';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class TeacherService {

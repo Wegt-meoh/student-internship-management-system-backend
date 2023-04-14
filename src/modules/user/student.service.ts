@@ -1,10 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-user.dto';
 import { Student } from './entities/student.entity';
-import {
-  FindAllStudentResponseVo,
-  StudentResponseDataItem,
-} from './vo/findAll-response.vo';
+import { FindAllStudentResponseVo } from './vo/findAll-response.vo';
 import { StudentInfoResponseVo } from './vo/info-response.vo';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
