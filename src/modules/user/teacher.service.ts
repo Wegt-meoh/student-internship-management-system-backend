@@ -9,6 +9,7 @@ import {
   TeacherResponseDataItem,
 } from './vo/findAll-response.vo';
 import { TeacherInfoResponseVo } from './vo/info-response.vo';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class TeacherService {
@@ -33,22 +34,24 @@ export class TeacherService {
   }
 
   async getTeacherInfo(phone: string): Promise<TeacherInfoResponseVo> {
-    const teacherResponse = new TeacherInfoResponseVo();
-    const user = await this.userService.findOneByPhone(phone);
-    if (!user) {
-      throw new BadRequestException('no such user');
-    }
-
-    const teacher = await this.teacherRepository.findOneBy({ user: user });
+    const teacher = await this.teacherRepository.findOne({
+      relations: ['user'],
+      where: {
+        user: {
+          phone: phone,
+        },
+      },
+    });
     if (!teacher) {
       throw new BadRequestException('no such teacher');
     }
 
-    teacherResponse.name = user.name;
-    teacherResponse.phone = user.phone;
-    teacherResponse.role = user.role;
-    teacherResponse.facuties = teacher.facuties;
-    return teacherResponse;
+    const { user, ...res } = teacher;
+    const { password, ...res1 } = user;
+    return {
+      ...res,
+      ...res1,
+    };
   }
 
   async findAllTeacher(): Promise<FindAllTeacherResponseVo> {
@@ -58,13 +61,12 @@ export class TeacherService {
 
     return {
       data: teacherList.map((teacher) => {
-        const teacherResponseItem = new TeacherResponseDataItem();
-        teacherResponseItem.id = teacher.user.id;
-        teacherResponseItem.facuties = teacher.facuties;
-        teacherResponseItem.name = teacher.user.name;
-        teacherResponseItem.phone = teacher.user.phone;
-        teacherResponseItem.role = teacher.user.role;
-        return teacherResponseItem;
+        const { user, ...res } = teacher;
+        const { password, ...res1 } = user;
+        return {
+          ...res,
+          ...res1,
+        };
       }),
     };
   }

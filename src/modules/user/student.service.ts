@@ -18,23 +18,24 @@ export class StudentService {
   ) {}
 
   async getStudentInfo(phone: string): Promise<StudentInfoResponseVo> {
-    const studentResponse = new StudentInfoResponseVo();
-    const user = await this.userService.findOneByPhone(phone);
-    if (!user) {
-      throw new BadRequestException('no such user');
-    }
-
-    const student = await this.studentRepository.findOneBy({ user });
+    const student = await this.studentRepository.findOne({
+      relations: ['user'],
+      where: {
+        user: {
+          phone,
+        },
+      },
+    });
     if (!student) {
       throw new BadRequestException('no such student');
     }
 
-    studentResponse.name = user.name;
-    studentResponse.class = student.class;
-    studentResponse.phone = user.phone;
-    studentResponse.role = user.role;
-
-    return studentResponse;
+    const { user, ...res } = student;
+    const { password, ...res1 } = user;
+    return {
+      ...res,
+      ...res1,
+    };
   }
 
   async findAllStudent(): Promise<FindAllStudentResponseVo> {
@@ -44,13 +45,12 @@ export class StudentService {
 
     return {
       data: studentList.map((student) => {
-        const studentResponseItem = new StudentResponseDataItem();
-        studentResponseItem.id = student.user.id;
-        studentResponseItem.class = student.class;
-        studentResponseItem.name = student.user.name;
-        studentResponseItem.phone = student.user.phone;
-        studentResponseItem.role = student.user.role;
-        return studentResponseItem;
+        const { user, ...res } = student;
+        const { password, ...res1 } = user;
+        return {
+          ...res,
+          ...res1,
+        };
       }),
     };
   }
