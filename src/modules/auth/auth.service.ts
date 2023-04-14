@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import * as bcrypt from 'bcrypt';
@@ -30,9 +30,5 @@ export class AuthService {
     } else {
       throw new UnauthorizedException('登录凭证检查失败，请重新登入');
     }
-  }
-
-  async verifyAsync(token: string, option: JwtVerifyOptions) {
-    return this.jwtService.verifyAsync(token, option);
   }
 }
