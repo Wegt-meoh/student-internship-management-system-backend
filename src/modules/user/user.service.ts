@@ -16,6 +16,10 @@ import {
   StudentResponseDataItem,
   TeacherResponseDataItem,
 } from './vo/findAll-response.vo';
+import {
+  StudentInfoResponseVo,
+  TeacherInfoResponseVo,
+} from './vo/info-response.vo';
 
 @Injectable()
 export class UserService {
@@ -24,6 +28,45 @@ export class UserService {
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(Student) private studentRepository: Repository<Student>,
   ) {}
+
+  async getTeacherInfo(phone: string): Promise<TeacherInfoResponseVo> {
+    const teacherResponse = new TeacherInfoResponseVo();
+    const user = await this.userRepository.findOneBy({ phone });
+    if (!user) {
+      throw new BadRequestException('no such user');
+    }
+
+    const teacher = await this.teacherRepository.findOneBy({ user: user });
+    if (!teacher) {
+      throw new BadRequestException('no such teacher');
+    }
+
+    teacherResponse.name = user.name;
+    teacherResponse.phone = user.phone;
+    teacherResponse.role = user.role;
+    teacherResponse.facuties = teacher.facuties;
+    return teacherResponse;
+  }
+
+  async getStudentInfo(phone: string): Promise<StudentInfoResponseVo> {
+    const studentResponse = new StudentInfoResponseVo();
+    const user = await this.userRepository.findOneBy({ phone });
+    if (!user) {
+      throw new BadRequestException('no such user');
+    }
+
+    const student = await this.studentRepository.findOneBy({ user });
+    if (!student) {
+      throw new BadRequestException('no such student');
+    }
+
+    studentResponse.name = user.name;
+    studentResponse.class = student.class;
+    studentResponse.phone = user.phone;
+    studentResponse.role = user.role;
+
+    return studentResponse;
+  }
 
   async findAllTeacher(): Promise<FindAllTeacherResponseVo> {
     const teacherList = await this.teacherRepository.find({
@@ -71,6 +114,7 @@ export class UserService {
     await this.teacherRepository.save(teacher);
 
     return {
+      statusCode: 200,
       message: '注册教师成功',
     };
   }
@@ -85,12 +129,15 @@ export class UserService {
     await this.studentRepository.save(student);
 
     return {
+      statusCode: 200,
       message: '注册学生成功',
     };
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const exist = await this.findOne(createUserDto.phone);
+    const exist = await this.userRepository.findOneBy({
+      phone: createUserDto.phone,
+    });
     if (exist) {
       throw new BadRequestException('电话号码已注册');
     }
@@ -104,8 +151,8 @@ export class UserService {
     return user;
   }
 
-  async findOne(phone: string) {
-    return await this.userRepository.findOneBy({ phone });
+  async findOneByPhone(phone: string) {
+    return this.userRepository.findOneBy({ phone });
   }
 
   async remove(phone: string) {
