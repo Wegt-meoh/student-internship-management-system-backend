@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './schemas/config.schema';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -25,15 +24,14 @@ import { UserModule } from './modules/user/user.module';
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
           entities: [],
-          synchronize: true,
+          synchronize: process.env.STAGE === 'dev' ? true : false,
           autoLoadEntities: true,
         };
       },
     }),
     AuthModule,
     UserModule,
+    PostModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

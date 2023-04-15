@@ -8,10 +8,11 @@ import { StudentService } from './student.service';
 import { TeacherService } from './teacher.service';
 import { TeacherController } from './teacher.controller';
 import { StudentController } from './student.controller';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Teacher, Student])],
-  controllers: [TeacherController, StudentController],
+  controllers: [UserController, TeacherController, StudentController],
   providers: [UserService, StudentService, TeacherService],
   exports: [UserService],
 })
