@@ -2,18 +2,30 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
-import { Teacher } from './entities/teacher.entity';
-import { Student } from './entities/student.entity';
-import { StudentService } from './student.service';
-import { TeacherService } from './teacher.service';
-import { TeacherController } from './teacher.controller';
-import { StudentController } from './student.controller';
+import { Teacher } from './teacher/teacher.entity';
+import { Student } from './student/student.entity';
+import { StudentService } from './student/student.service';
+import { TeacherService } from './teacher/teacher.service';
+import { TeacherController } from './teacher/teacher.controller';
+import { StudentController } from './student/student.controller';
 import { UserController } from './user.controller';
+import { StudentPostService } from './student-post/student-post.service';
+import { StudentPostController } from './student-post/student-post.controller';
+import { StudentPost } from './student-post/student-post.entity';
+import { PostModule } from '../post/post.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Teacher, Student])],
-  controllers: [UserController, TeacherController, StudentController],
-  providers: [UserService, StudentService, TeacherService],
+  imports: [
+    PostModule,
+    TypeOrmModule.forFeature([User, Teacher, Student, StudentPost]),
+  ],
+  controllers: [
+    UserController,
+    TeacherController,
+    StudentController,
+    StudentPostController,
+  ],
+  providers: [UserService, StudentService, TeacherService, StudentPostService],
   exports: [UserService],
 })
 export class UserModule {}

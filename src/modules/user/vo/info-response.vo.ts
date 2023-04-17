@@ -19,6 +19,12 @@ class UserInfoResponseVo {
     example: RoleEnum.TEACHER,
   })
   role: RoleEnum;
+
+  @ApiProperty({
+    name: 'userId',
+    example: 1,
+  })
+  userId: number;
 }
 
 export class StudentInfoResponseVo extends UserInfoResponseVo {
@@ -27,6 +33,12 @@ export class StudentInfoResponseVo extends UserInfoResponseVo {
     example: '计算机192',
   })
   class: string;
+
+  @ApiProperty({
+    name: 'studentId',
+    example: 2,
+  })
+  studentId: number;
 }
 
 export class TeacherInfoResponseVo extends UserInfoResponseVo {
@@ -35,4 +47,10 @@ export class TeacherInfoResponseVo extends UserInfoResponseVo {
     example: '机械与电气工程学院',
   })
   facuties: string;
+
+  @ApiProperty({
+    name: 'teacherId',
+    example: 3,
+  })
+  teacherId: number;
 }

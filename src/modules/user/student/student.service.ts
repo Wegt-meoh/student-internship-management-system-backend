@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateStudentDto } from './dto/create-user.dto';
-import { Student } from './entities/student.entity';
-import { FindAllStudentResponseVo } from './vo/findAll-response.vo';
-import { StudentInfoResponseVo } from './vo/info-response.vo';
+import { Student } from './student.entity';
+import { FindAllStudentResponseVo } from '../vo/findAll-response.vo';
+import { StudentInfoResponseVo } from '../vo/info-response.vo';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from './user.service';
+import { UserService } from '../user.service';
+import { CreateStudentDto } from './create-student.dto';
 
 @Injectable()
 export class StudentService {
@@ -27,11 +27,13 @@ export class StudentService {
       throw new BadRequestException('no such student');
     }
 
-    const { user, ...res } = student;
-    const { password, ...res1 } = user;
+    const { user, id: studentId, ...res } = student;
+    const { password, id: userId, ...res1 } = user;
     return {
       ...res,
       ...res1,
+      userId,
+      studentId,
     };
   }
 
@@ -42,11 +44,13 @@ export class StudentService {
 
     return {
       data: studentList.map((student) => {
-        const { user, ...res } = student;
-        const { password, ...res1 } = user;
+        const { user, id: studentId, ...res } = student;
+        const { password, id: userId, ...res1 } = user;
         return {
           ...res,
           ...res1,
+          studentId,
+          userId,
         };
       }),
     };
@@ -65,5 +69,13 @@ export class StudentService {
       statusCode: 200,
       message: '注册学生成功',
     };
+  }
+
+  async findByUserId(userId: number) {
+    return this.studentRepository.findOneBy({ user: { id: userId } });
+  }
+
+  async findOne(student: Student) {
+    return this.studentRepository.findOne({ where: { ...student } });
   }
 }

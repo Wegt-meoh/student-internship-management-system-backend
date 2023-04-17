@@ -41,4 +41,8 @@ export class PostService {
     console.log(result);
     return result;
   }
+
+  async findOne(post: PostEntity) {
+    return this.postRepository.findOne({ where: { ...post } });
+  }
 }

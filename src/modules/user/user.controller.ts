@@ -4,8 +4,8 @@ import { GetUser } from 'src/decorators/get-user.decorator';
 import { RoleEnum } from 'src/enums/role.enum';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { StudentService } from './student.service';
-import { TeacherService } from './teacher.service';
+import { StudentService } from './student/student.service';
+import { TeacherService } from './teacher/teacher.service';
 import { TeacherInfoResponseVo } from './vo/info-response.vo';
 
 @ApiTags('User')

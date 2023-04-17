@@ -8,9 +8,9 @@ import {
 import { StudentService } from './student.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEnum } from 'src/enums/role.enum';
-import { CreateStudentDto } from './dto/create-user.dto';
-import { FindAllStudentResponseVo } from './vo/findAll-response.vo';
-import { RegisterResponseVo } from './vo/register-response.vo';
+import { FindAllStudentResponseVo } from '../vo/findAll-response.vo';
+import { RegisterResponseVo } from '../vo/register-response.vo';
+import { CreateStudentDto } from './create-student.dto';
 
 @ApiTags('Student')
 @Controller('/student')

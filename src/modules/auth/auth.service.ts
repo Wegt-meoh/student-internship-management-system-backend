@@ -5,6 +5,7 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from './jwt-payload.interface';
 import { ConfigService } from '@nestjs/config';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,7 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { phone };
       const token = this.jwtService.sign(payload);
-      return { token };
+      return { token, info: instanceToPlain(user) };
     } else {
       throw new UnauthorizedException('登录凭证检查失败，请重新登入');
     }

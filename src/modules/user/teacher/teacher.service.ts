@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from '../user.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Teacher } from './entities/teacher.entity';
+import { Teacher } from './teacher.entity';
 import { Repository } from 'typeorm';
-import { CreateTeacherDto } from './dto/create-user.dto';
-import { FindAllTeacherResponseVo } from './vo/findAll-response.vo';
-import { TeacherInfoResponseVo } from './vo/info-response.vo';
+import { FindAllTeacherResponseVo } from '../vo/findAll-response.vo';
+import { TeacherInfoResponseVo } from '../vo/info-response.vo';
+import { CreateTeacherDto } from './create-teacher.dto';
 
 @Injectable()
 export class TeacherService {
@@ -42,11 +42,13 @@ export class TeacherService {
       throw new BadRequestException('no such teacher');
     }
 
-    const { user, ...res } = teacher;
-    const { password, ...res1 } = user;
+    const { user, id: teacherId, ...res } = teacher;
+    const { password, id: userId, ...res1 } = user;
     return {
       ...res,
       ...res1,
+      teacherId,
+      userId,
     };
   }
 
@@ -57,13 +59,22 @@ export class TeacherService {
 
     return {
       data: teacherList.map((teacher) => {
-        const { user, ...res } = teacher;
-        const { password, ...res1 } = user;
+        const { user, id: teacherId, ...res } = teacher;
+        const { password, id: userId, ...res1 } = user;
         return {
           ...res,
           ...res1,
+          teacherId,
+          userId,
         };
       }),
     };
+  }
+
+  async findByTeacherId(teacherId: number) {
+    return await this.teacherRepository.findOne({
+      where: { id: teacherId },
+      relations: ['user'],
+    });
   }
 }

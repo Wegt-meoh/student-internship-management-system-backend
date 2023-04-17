@@ -33,23 +33,3 @@ export class CreateUserDto {
   @IsEnum(RoleEnum)
   role: RoleEnum;
 }
-
-export class CreateTeacherDto extends CreateUserDto {
-  @ApiProperty({
-    name: 'facuties',
-    example: '机械与电气工程学院',
-  })
-  @IsString()
-  @IsNotEmpty()
-  facuties: string;
-}
-
-export class CreateStudentDto extends CreateUserDto {
-  @ApiProperty({
-    name: 'class',
-    example: '计算机192',
-  })
-  @IsString()
-  @IsNotEmpty()
-  class: string;
-}

@@ -8,9 +8,9 @@ import {
 import { TeacherService } from './teacher.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEnum } from 'src/enums/role.enum';
-import { CreateTeacherDto } from './dto/create-user.dto';
-import { FindAllTeacherResponseVo } from './vo/findAll-response.vo';
-import { RegisterResponseVo } from './vo/register-response.vo';
+import { FindAllTeacherResponseVo } from '../vo/findAll-response.vo';
+import { RegisterResponseVo } from '../vo/register-response.vo';
+import { CreateTeacherDto } from './create-teacher.dto';
 
 @ApiTags('Teacher')
 @Controller('teacher')
@@ -34,7 +34,7 @@ export class TeacherController {
   @ApiOkResponse({
     type: () => FindAllTeacherResponseVo,
   })
-  @Get('/findAll')
+  @Get()
   findAllTeacher(): Promise<FindAllTeacherResponseVo> {
     return this.teacherService.findAllTeacher();
   }
