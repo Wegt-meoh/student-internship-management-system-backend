@@ -5,12 +5,15 @@ import { configValidationSchema } from './schemas/config.schema';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { PostModule } from './modules/post/post.module';
+import { ReportModule } from './modules/report/report.module';
+import { OssModule } from './modules/oss/oss.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -32,6 +35,8 @@ import { PostModule } from './modules/post/post.module';
     AuthModule,
     UserModule,
     PostModule,
+    ReportModule,
+    OssModule,
   ],
 })
 export class AppModule {}
