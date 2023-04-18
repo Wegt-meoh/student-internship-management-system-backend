@@ -7,6 +7,7 @@ import { UserModule } from './modules/user/user.module';
 import { PostModule } from './modules/post/post.module';
 import { ReportModule } from './modules/report/report.module';
 import { OssModule } from './modules/oss/oss.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { OssModule } from './modules/oss/oss.module';
     PostModule,
     ReportModule,
     OssModule,
+    TasksModule,
   ],
 })
 export class AppModule {}

@@ -26,6 +26,6 @@ import { PostModule } from '../post/post.module';
     StudentPostController,
   ],
   providers: [UserService, StudentService, TeacherService, StudentPostService],
-  exports: [UserService],
+  exports: [UserService, StudentService, TeacherService],
 })
 export class UserModule {}
