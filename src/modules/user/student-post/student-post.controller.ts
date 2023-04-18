@@ -31,17 +31,17 @@ export class StudentPostController {
   @Auth(RoleEnum.STUDENT)
   @Post()
   async create(@Body() createStudentPostDto: CreateStudentPostDto) {
-    const { student_id, post_id } = createStudentPostDto;
+    const { studentId, postId } = createStudentPostDto;
 
     const student = await this.studentService.findOne(
-      plainToInstance(Student, { id: student_id }),
+      plainToInstance(Student, { id: studentId }),
     );
     if (!student) {
       throw new BadRequestException();
     }
 
     const post = await this.postSerive.findOne(
-      plainToInstance(PostEntity, { id: post_id }),
+      plainToInstance(PostEntity, { id: postId }),
     );
     if (!post) {
       throw new BadRequestException();

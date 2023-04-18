@@ -36,7 +36,7 @@ export class StudentPostService {
   }
 
   async findByStudentId(studentId: number) {
-    return this.studentPostRepository.findOneBy({ student_id: studentId });
+    return this.studentPostRepository.findOneBy({ studentId });
   }
 
   async findByUserId(userId: number) {

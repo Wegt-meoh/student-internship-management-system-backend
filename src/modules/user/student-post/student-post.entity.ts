@@ -6,11 +6,11 @@ export class StudentPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  student_id: number;
+  @Column({ name: 'student_id' })
+  studentId: number;
 
-  @Column()
-  post_id: number;
+  @Column({ name: 'post_id' })
+  postId: number;
 
   @Column({ default: StudentPostStatus.PEDING })
   status: StudentPostStatus;

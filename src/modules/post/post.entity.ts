@@ -22,6 +22,6 @@ export class PostEntity {
   company: string;
 
   @ManyToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
