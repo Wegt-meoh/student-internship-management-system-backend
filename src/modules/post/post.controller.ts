@@ -35,7 +35,7 @@ export class PostController {
 
   @Auth()
   @Get(':id')
-  findById(@Param('id') id: number) {
+  findById(@Param('id', ParseIntPipe) id: number) {
     const post = new PostEntity();
     post.id = id;
     return this.postService.findOne(post);
@@ -43,7 +43,7 @@ export class PostController {
 
   @Auth()
   @Get('findByUser/:id')
-  findByUser(@Param('id') id: number) {
+  findByUser(@Param('id', ParseIntPipe) id: number) {
     const user = new User();
     user.id = id;
     return this.postService.findByUser(user);
@@ -51,7 +51,7 @@ export class PostController {
 
   @Auth()
   @Delete(':id')
-  deletePost(@Param('id') id: number) {
+  deletePost(@Param('id', ParseIntPipe) id: number) {
     const post = new PostEntity();
     post.id = id;
     return this.postService.remove(post);
