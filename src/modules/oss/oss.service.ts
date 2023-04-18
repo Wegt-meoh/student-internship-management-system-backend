@@ -32,7 +32,7 @@ export class OssService {
 
     this.uploadPath = path.normalize(this.uploadPath);
     this.ossDomain = configService.get('OSS_DOMAIN');
-    this.ossServerRoot = configService.get('');
+    this.ossServerRoot = configService.get('OSS_SERVER_ROOT');
 
     if (
       !existsSync(this.uploadPath) ||
