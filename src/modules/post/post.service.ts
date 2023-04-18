@@ -38,7 +38,6 @@ export class PostService {
       relations: ['user'],
       where: { user },
     });
-    console.log(result);
     return result;
   }
 

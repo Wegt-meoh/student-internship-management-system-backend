@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { Auth } from 'src/decorators/auth.decorator';
 import { RoleEnum } from 'src/enums/role.enum';
@@ -27,12 +35,21 @@ export class PostController {
 
   @Auth()
   @Get(':id')
+  findById(@Param('id') id: number) {
+    const post = new PostEntity();
+    post.id = id;
+    return this.postService.findOne(post);
+  }
+
+  @Auth()
+  @Get('findByUser/:id')
   findByUser(@Param('id') id: number) {
     const user = new User();
     user.id = id;
     return this.postService.findByUser(user);
   }
 
+  @Auth()
   @Delete(':id')
   deletePost(@Param('id') id: number) {
     const post = new PostEntity();
