@@ -36,9 +36,7 @@ export class PostController {
   @Auth()
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number) {
-    const post = new PostEntity();
-    post.id = id;
-    return this.postService.findOne(post);
+    return this.postService.findOne(id);
   }
 
   @Auth()

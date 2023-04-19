@@ -41,7 +41,7 @@ export class PostService {
     return result;
   }
 
-  async findOne(post: PostEntity) {
-    return this.postRepository.findOne({ where: { ...post } });
+  async findOne(id: number) {
+    return this.postRepository.findOneBy({ id });
   }
 }

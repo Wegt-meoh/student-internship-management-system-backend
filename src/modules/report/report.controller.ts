@@ -15,6 +15,7 @@ import { Auth } from 'src/decorators/auth.decorator';
 import { RoleEnum } from 'src/enums/role.enum';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/entities/user.entity';
+import { SearchReportDto } from './dto/search-report.dto';
 
 @ApiTags('Report')
 @Controller('report')
@@ -27,21 +28,19 @@ export class ReportController {
     return this.reportService.create(createReportDto, user);
   }
 
-  @Get()
-  findAll() {
-    return this.reportService.findAll();
+  @Auth()
+  @Post('findBy')
+  findBy(@Body() searchReportDto: SearchReportDto) {
+    return this.reportService.findBy(searchReportDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reportService.findOne(+id);
-  }
-
+  @Auth(RoleEnum.STUDENT)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
     return this.reportService.update(+id, updateReportDto);
   }
 
+  @Auth(RoleEnum.STUDENT)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.reportService.remove(+id);

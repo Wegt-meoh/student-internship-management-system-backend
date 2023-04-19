@@ -16,13 +16,13 @@ export class Report {
   @Column({ name: 'task_id' })
   taskId: number;
 
-  @Column({ comment: 'oss url' })
-  url: string;
+  @Column({ comment: 'oss url', name: 'attachment_url' })
+  attachmentUrl: string;
 
   @CreateDateColumn({
     type: 'timestamp',
     name: 'create_date',
     comment: '创建时间',
   })
-  createDate: Date | string;
+  createDate: Date;
 }

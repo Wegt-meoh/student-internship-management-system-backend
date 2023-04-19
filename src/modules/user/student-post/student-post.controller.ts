@@ -40,9 +40,7 @@ export class StudentPostController {
       throw new BadRequestException();
     }
 
-    const post = await this.postSerive.findOne(
-      plainToInstance(PostEntity, { id: postId }),
-    );
+    const post = await this.postSerive.findOne(postId);
     if (!post) {
       throw new BadRequestException();
     }

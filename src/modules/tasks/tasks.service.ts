@@ -20,9 +20,7 @@ export class TasksService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto, user: User) {
-    const post = await this.postService.findOne(
-      plainToInstance(PostEntity, { id: createTaskDto.postId }),
-    );
+    const post = await this.postService.findOne(createTaskDto.postId);
     if (!post) {
       throw new BadRequestException('no such post');
     }
@@ -41,7 +39,7 @@ export class TasksService {
   }
 
   findOne(id: number) {
-    return this.taskRepository.findBy({ id });
+    return this.taskRepository.findOneBy({ id });
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
