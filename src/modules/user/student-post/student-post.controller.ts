@@ -13,7 +13,6 @@ import { StudentService } from '../student/student.service';
 import { PostService } from 'src/modules/post/post.service';
 import { plainToInstance } from 'class-transformer';
 import { Student } from '../student/student.entity';
-import { PostEntity } from 'src/modules/post/post.entity';
 import { Auth } from 'src/decorators/auth.decorator';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../entities/user.entity';

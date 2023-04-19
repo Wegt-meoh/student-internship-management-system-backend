@@ -9,7 +9,6 @@ import { User } from '../user/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 import { PostService } from '../post/post.service';
 import { SearchTaskDto } from './dto/search-task.dto';
-import { PostEntity } from '../post/post.entity';
 
 @Injectable()
 export class TasksService {
