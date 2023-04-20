@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -29,7 +29,7 @@ export class AuthService {
       const token = this.jwtService.sign(payload);
       return { token, info: instanceToPlain(user) };
     } else {
-      throw new UnauthorizedException('登录凭证检查失败，请重新登入');
+      throw new BadRequestException('登录凭证检查失败，请重新登入');
     }
   }
 }

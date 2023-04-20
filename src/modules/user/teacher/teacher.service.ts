@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Teacher } from './teacher.entity';
@@ -39,7 +39,7 @@ export class TeacherService {
       },
     });
     if (!teacher) {
-      throw new BadRequestException('no such teacher');
+      throw new UnauthorizedException('no such teacher');
     }
 
     const { user, id: teacherId, ...res } = teacher;

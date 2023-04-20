@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Student } from './student.entity';
 import { FindAllStudentResponseVo } from '../vo/findAll-response.vo';
 import { StudentInfoResponseVo } from '../vo/info-response.vo';
@@ -24,7 +24,7 @@ export class StudentService {
       },
     });
     if (!student) {
-      throw new BadRequestException('no such student');
+      throw new UnauthorizedException('no such student');
     }
 
     const { user, id: studentId, ...res } = student;
