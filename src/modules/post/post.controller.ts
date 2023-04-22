@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { PostService } from './post.service';
@@ -14,7 +15,8 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { PostEntity } from './post.entity';
+import { SearchPostDto } from './dto/find-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -28,9 +30,9 @@ export class PostController {
   }
 
   @Auth()
-  @Get()
-  findAll() {
-    return this.postService.findAll();
+  @Post('search')
+  findBy(@Body() searchPostDto: SearchPostDto) {
+    return this.postService.search(searchPostDto);
   }
 
   @Auth()
@@ -39,19 +41,18 @@ export class PostController {
     return this.postService.findOne(id);
   }
 
-  @Auth()
-  @Get('findByUser/:id')
-  findByUser(@Param('id', ParseIntPipe) id: number) {
-    const user = new User();
-    user.id = id;
-    return this.postService.findByUser(user);
+  @Auth(RoleEnum.TEACHER)
+  @Patch(':id')
+  updatePost(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postService.update(updatePostDto, id);
   }
 
-  @Auth()
+  @Auth(RoleEnum.TEACHER)
   @Delete(':id')
-  deletePost(@Param('id', ParseIntPipe) id: number) {
-    const post = new PostEntity();
-    post.id = id;
-    return this.postService.remove(post);
+  deletePost(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
+    return this.postService.remove(id, user);
   }
 }

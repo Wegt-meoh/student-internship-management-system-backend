@@ -54,7 +54,7 @@ export class StudentPostController {
 
   @Get()
   @Auth()
-  async findById(@GetUser() user: User) {
+  async findByUserId(@GetUser() user: User) {
     if (user.role === RoleEnum.STUDENT) {
       const student = await this.studentService.findByUserId(user.id);
       return this.studentPostService.findByStudentId(student.id);

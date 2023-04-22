@@ -8,6 +8,7 @@ import { TeacherService } from '../teacher/teacher.service';
 import { PostService } from 'src/modules/post/post.service';
 import { plainToInstance } from 'class-transformer';
 import { User } from '../entities/user.entity';
+import { PostEntity } from 'src/modules/post/post.entity';
 
 @Injectable()
 export class StudentPostService {
@@ -40,20 +41,16 @@ export class StudentPostService {
   }
 
   async findByUserId(userId: number) {
-    const postList = await this.postService.findByUser(
-      plainToInstance(User, { id: userId }),
+    return this.studentPostRepository.findBy(
+      plainToInstance(StudentPost, { userId }),
     );
-    let queryBuild = this.studentPostRepository.createQueryBuilder();
-    postList.forEach((post) => {
-      queryBuild = queryBuild.orWhere({ post_id: post.id });
-    });
-
-    return queryBuild.execute();
   }
 
   async findByTeacherId(teacherId: number) {
     const teacher = await this.teacherService.findByTeacherId(teacherId);
-    const postList = await this.postService.findByUser(teacher.user);
+    const postList = await this.postService.search(
+      plainToInstance(PostEntity, { userId: teacher.user.id }),
+    );
     let queryBuild = this.studentPostRepository.createQueryBuilder();
     postList.forEach((post) => {
       queryBuild = queryBuild.orWhere({ post_id: post.id });

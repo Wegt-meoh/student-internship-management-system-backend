@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreatePostItem {
+export class CreatePostDto {
   @ApiProperty({
     name: 'name',
     example: '前端开发工程师',
@@ -25,13 +25,4 @@ export class CreatePostItem {
   @IsString()
   @IsNotEmpty()
   company: string;
-}
-
-export class CreatePostDto {
-  @ApiProperty({
-    name: 'data',
-    isArray: true,
-    type: () => CreatePostItem,
-  })
-  data: CreatePostItem[];
 }
