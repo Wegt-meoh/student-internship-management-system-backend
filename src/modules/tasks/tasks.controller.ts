@@ -8,7 +8,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
 import { TaskReponseVo } from './vo/taskResponse.vo';
-import { ReportResponseVo } from '../report/vo/reportResponse.vo';
 import { FindAllReportInTheTaskVo } from './vo/findAllReportInTheTaskResponse.vo';
 
 @ApiTags('Task')

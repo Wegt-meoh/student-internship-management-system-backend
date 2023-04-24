@@ -1,5 +1,3 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
-import { CreateReportDto } from './create-report.dto';
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class UpdateReportDto {

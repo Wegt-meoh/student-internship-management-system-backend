@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Auth } from 'src/decorators/auth.decorator';
 import { RoleEnum } from 'src/enums/Role.enum';

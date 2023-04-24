@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserResponseVo } from 'src/modules/user/vo/userResponse.vo';
 import { RequestPostVo } from './requestPost.vo';
 import { PostResponseVo } from 'src/modules/post/vo/postResponse.vo';

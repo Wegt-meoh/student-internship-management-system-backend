@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
-import { PostService } from '../post/post.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { PostEntity } from '../post/post.entity';
@@ -25,7 +24,7 @@ export class TasksService {
 
     await this.taskRepo.save(
       plainToInstance(Task, {
-        ...createTaskDto,
+        ...res,
         targetPost: postExist,
         createdUser: user,
       }),

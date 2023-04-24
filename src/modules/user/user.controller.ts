@@ -7,7 +7,6 @@ import { UserResponseVo } from './vo/userResponse.vo';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SuccMessageReponseVo } from '../../utils/vo/succ-message-response.vo';
-import { SearchUserDto } from './dto/search-user.dto';
 
 @ApiTags('User')
 @Controller('user')
