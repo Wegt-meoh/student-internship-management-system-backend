@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
+import { RequestPostStatus } from 'src/enums/RequestPostStatus.enum';
 
 @Injectable()
 export class PostService {
@@ -30,5 +31,43 @@ export class PostService {
         createdUser: true,
       },
     });
+  }
+
+  async findAllStudentInThePost(postId: number) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: {
+        requested: {
+          requestUser: true,
+        },
+      },
+    });
+
+    if (!post) {
+      return [];
+    }
+
+    return post.requested
+      .filter((requestPost) => {
+        return requestPost.status === RequestPostStatus.RESOLVE;
+      })
+      .map((requestPost) => {
+        return requestPost.requestUser;
+      });
+  }
+
+  async findAllTaskInThePost(postId: number) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: {
+        taskList: true,
+      },
+    });
+
+    if (!post) {
+      return [];
+    }
+
+    return post.taskList;
   }
 }
