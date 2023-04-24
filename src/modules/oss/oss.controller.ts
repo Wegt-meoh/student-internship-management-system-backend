@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { OssService } from './oss.service';
 import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { User } from '../user/entities/user.entity';
+import { User } from '../user/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Auth } from 'src/decorators/auth.decorator';
 import { GetUser } from 'src/decorators/get-user.decorator';

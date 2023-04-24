@@ -22,7 +22,8 @@ export class AuthService {
   async signIn(authCredentialsDto: AuthCredentialsDto) {
     const { phone, password } = authCredentialsDto;
 
-    const user = await this.userService.findOneByPhone(phone);
+    const users = await this.userService.search({ phone });
+    const user = users[0];
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { phone };

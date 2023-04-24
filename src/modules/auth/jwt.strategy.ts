@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
-import { User } from '../user/entities/user.entity';
+import { User } from '../user/user.entity';
 import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
@@ -21,10 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload): Promise<User> {
     const { phone } = payload;
-    const user = await this.userService.findOneByPhone(phone);
-    if (!user) {
+    const users = await this.userService.search({ phone });
+    if (users.length === 0) {
       throw new ForbiddenException('no such user');
     }
-    return user;
+    return users[0];
   }
 }

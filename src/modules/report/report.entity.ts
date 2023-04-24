@@ -1,7 +1,10 @@
+import { Task } from 'src/modules/tasks/task.entity';
+import { User } from 'src/modules/user/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -10,14 +13,17 @@ export class Report {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'student_id' })
-  studentId: number;
+  @ManyToOne(() => User, (user) => user.reportList)
+  user: User;
 
-  @Column({ name: 'task_id' })
-  taskId: number;
+  @ManyToOne(() => Task, (task) => task.receivedReportList)
+  task: Task;
 
   @Column({ comment: 'oss url', name: 'attachment_url' })
   attachmentUrl: string;
+
+  @Column({ nullable: true })
+  score: number | null;
 
   @CreateDateColumn({
     type: 'timestamp',

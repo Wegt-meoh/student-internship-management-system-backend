@@ -4,10 +4,10 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { OssEntity } from './entities/oss.entity';
+import { OssEntity } from './oss.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../user/entities/user.entity';
+import { User } from '../user/user.entity';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { createWriteStream, existsSync, mkdirSync, statSync } from 'fs';

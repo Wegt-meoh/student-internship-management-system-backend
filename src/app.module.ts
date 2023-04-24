@@ -8,6 +8,7 @@ import { PostModule } from './modules/post/post.module';
 import { ReportModule } from './modules/report/report.module';
 import { OssModule } from './modules/oss/oss.module';
 import { TasksModule } from './modules/tasks/tasks.module';
+import { RequestPostModule } from './modules/requestPost/requstPostModule.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
     AuthModule,
     UserModule,
     PostModule,
+    RequestPostModule,
     ReportModule,
     OssModule,
     TasksModule,

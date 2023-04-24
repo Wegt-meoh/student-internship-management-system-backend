@@ -1,14 +1,16 @@
-import { CreateTaskDto } from './create-task.dto';
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class SearchTaskDto extends PartialType(CreateTaskDto) {
-  @ApiProperty({
-    name: 'teacherId',
-    example: 1,
-  })
+export class SearchTaskDto {
+  @ApiProperty({})
   @IsOptional()
   @IsNumber()
   @IsNotEmpty()
-  teacherId: number;
+  createdUserId?: number;
+
+  @ApiProperty({})
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  targetPostId?: number;
 }

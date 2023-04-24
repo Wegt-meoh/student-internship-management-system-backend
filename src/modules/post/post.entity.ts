@@ -1,11 +1,13 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../user/entities/user.entity';
+import { User } from '../user/user.entity';
+import { Task } from '../tasks/task.entity';
+import { RequestPost } from '../requestPost/requestPost.entity';
 
 @Entity()
 export class PostEntity {
@@ -18,10 +20,15 @@ export class PostEntity {
   @Column()
   position: string;
 
+  @ManyToOne(() => User, (user) => user.createPostList)
+  createdUser: User;
+
   @Column()
   company: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @OneToMany(() => Task, (task) => task.targetPost)
+  taskList: Task[];
+
+  @OneToMany(() => RequestPost, (requstPost) => requstPost.targetPost)
+  requested: RequestPost[];
 }
