@@ -71,13 +71,12 @@ export class RequestPostService {
     };
   }
 
-  teacherFindAll(user: User) {
-    return this.postRepo.find({
-      where: { createdUser: { id: user.id } },
+  async teacherFindAll(user: User) {
+    return this.requestPostRepo.find({
+      where: { targetPost: { createdUser: { id: user.id } } },
       relations: {
-        requested: {
-          requestUser: true,
-        },
+        targetPost: true,
+        requestUser: true,
       },
     });
   }
