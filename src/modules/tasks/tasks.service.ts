@@ -39,4 +39,21 @@ export class TasksService {
   findAll() {
     return this.taskRepo.find();
   }
+
+  async findAllReportInTheTask(taskId: number) {
+    const task = await this.taskRepo.findOne({
+      where: { id: taskId },
+      relations: {
+        receivedReportList: {
+          user: true,
+        },
+      },
+    });
+
+    if (!task) {
+      return [];
+    }
+
+    return task.receivedReportList;
+  }
 }

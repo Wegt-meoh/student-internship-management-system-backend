@@ -47,7 +47,7 @@ export class PostController {
   }
 
   @ApiOperation({ description: '查询此岗位下的所有任务' })
-  @Auth(RoleEnum.TEACHER)
+  @Auth()
   @Get('/task/:id')
   findAllTaskInThePost(@Param('id') id: string): Promise<TaskReponseVo[]> {
     return this.postService.findAllTaskInThePost(+id);

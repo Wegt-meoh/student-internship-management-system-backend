@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { Auth } from 'src/decorators/auth.decorator';
 import { RoleEnum } from 'src/enums/Role.enum';
@@ -8,6 +8,8 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
 import { TaskReponseVo } from './vo/taskResponse.vo';
+import { ReportResponseVo } from '../report/vo/reportResponse.vo';
+import { FindAllReportInTheTaskVo } from './vo/findAllReportInTheTaskResponse.vo';
 
 @ApiTags('Task')
 @Controller('tasks')
@@ -27,5 +29,14 @@ export class TasksController {
   @Get()
   findAll(): Promise<TaskReponseVo[]> {
     return this.tasksService.findAll();
+  }
+
+  @ApiOperation({ description: '查询所有在此任务下的提交报告' })
+  @Auth(RoleEnum.TEACHER)
+  @Get(':id')
+  findAllReportInTheTask(
+    @Param('id') id: string,
+  ): Promise<FindAllReportInTheTaskVo[]> {
+    return this.tasksService.findAllReportInTheTask(+id);
   }
 }

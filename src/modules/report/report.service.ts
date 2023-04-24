@@ -1,48 +1,53 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateReportDto } from './dto/create-report.dto';
-import { UpdateReportDto } from './dto/update-report.dto';
 import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './report.entity';
 import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { TasksService } from '../tasks/tasks.service';
+import { Task } from '../tasks/task.entity';
+import { UpdateReportDto } from './dto/update-report.dto';
 
 @Injectable()
 export class ReportService {
   constructor(
-    @InjectRepository(Report) private reportRepository: Repository<Report>,
-    private taskService: TasksService,
+    @InjectRepository(Report) private reportRepo: Repository<Report>,
+    @InjectRepository(Task) private taskRepo: Repository<Task>,
   ) {}
 
   async create(createReportDto: CreateReportDto, user: User) {
-    // const { taskId } = createReportDto;
-    // const task = await this.taskService.findOne(taskId);
-    // if (!task) {
-    //   throw new BadRequestException('no such task');
-    // }
-    // const { studentId } = await this.studentService.findByUserId(user.id);
-    // const report = {
-    //   ...createReportDto,
-    //   studentId,
-    // };
-    // await this.reportRepository.save(report);
-    // return {
-    //   message: '成功提交',
-    // };
-  }
+    const { taskId, attachmentUrl } = createReportDto;
 
-  findOne(id: number) {
-    return this.reportRepository.findOneBy({ id });
-  }
+    const taskExist = await this.taskRepo.findOneBy({ id: taskId });
+    if (!taskExist) {
+      throw new BadRequestException('任务不存在');
+    }
 
-  update(id: number, updateReportDto: UpdateReportDto) {
-    return this.reportRepository.save(
-      plainToInstance(Report, { ...updateReportDto, id }),
+    await this.reportRepo.save(
+      plainToInstance(Report, { attachmentUrl, task: taskExist, user }),
     );
+
+    return {
+      message: '创建成功',
+    };
   }
 
-  remove(id: number) {
-    return this.reportRepository.remove(plainToInstance(Report, { id }));
+  findAll() {
+    return this.reportRepo.find();
+  }
+
+  async update(updateReportDto: UpdateReportDto) {
+    const { id, score } = updateReportDto;
+    await this.reportRepo.save(plainToInstance(Report, { id, score }));
+    return {
+      message: '评分成功',
+    };
+  }
+
+  async delete(id: number) {
+    await this.reportRepo.remove(plainToInstance(Report, { id }));
+    return {
+      message: '删除成功',
+    };
   }
 }
