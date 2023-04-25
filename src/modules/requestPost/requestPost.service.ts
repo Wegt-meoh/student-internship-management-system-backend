@@ -71,9 +71,9 @@ export class RequestPostService {
     };
   }
 
-  async teacherFindAll(user: User) {
+  async findAllRequestPostTheTeacherManage(userId: number) {
     return this.requestPostRepo.find({
-      where: { targetPost: { createdUser: { id: user.id } } },
+      where: { targetPost: { createdUser: { id: userId } } },
       relations: {
         targetPost: true,
         requestUser: true,
@@ -81,14 +81,16 @@ export class RequestPostService {
     });
   }
 
-  studentFindAll(user: User) {
-    return this.userRepo.findOne({
-      where: { id: user.id },
+  findAllRequestPostTheStudentSubmit(userId: number) {
+    return this.requestPostRepo.find({
+      where: {
+        requestUser: {
+          id: userId,
+        },
+      },
       relations: {
-        requestPost: {
-          targetPost: {
-            createdUser: true,
-          },
+        targetPost: {
+          createdUser: true,
         },
       },
     });

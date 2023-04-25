@@ -7,9 +7,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
 import { SuccMessageReponseVo } from 'src/utils/vo/succ-message-response.vo';
-import { FindAllPostResponseVo } from './vo/findAllPostResponse.vo';
+import { PostWithCreatedUserVo } from './vo/postWithCreatedUser.vo';
 import { UserResponseVo } from '../user/vo/userResponse.vo';
-import { TaskReponseVo } from '../tasks/vo/taskResponse.vo';
 import { FindAllTaskAndReportCountVo } from './vo/findAllTaskAndReportCount.vo';
 import { FindAllTaskAndOneReportVo } from './vo/findAllTaskAndOneReport.vo';
 import { PostResponseVo } from './vo/postResponse.vo';
@@ -30,7 +29,7 @@ export class PostController {
 
   @Auth()
   @Get()
-  findAll(): Promise<FindAllPostResponseVo[]> {
+  findAll(): Promise<PostWithCreatedUserVo[]> {
     return this.postService.findAll();
   }
 

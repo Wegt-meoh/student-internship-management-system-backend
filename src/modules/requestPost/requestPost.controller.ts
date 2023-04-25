@@ -16,11 +16,10 @@ import { UpdateRequestPostDto } from './dto/updateRequestPost.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
-import { TeacherFindAllVo } from './vo/teacherFIndAll.vo';
-import { StudentFindAllVo } from './vo/studentFindAll.vo';
+import { RequestPostWithStudentAndPostVo } from './vo/requestPostWithStudentAndPost.vo';
 
 @ApiTags('RequestPost')
-@Controller('requestPost')
+@Controller('/request/post')
 export class RequestPostController {
   constructor(private requestPostService: RequestPostService) {}
 
@@ -45,15 +44,19 @@ export class RequestPostController {
   @ApiOperation({ description: '查询教师负责岗位的所有请求' })
   @Auth(RoleEnum.TEACHER)
   @Get('teacher')
-  teacherFindAll(@GetUser() user: User): Promise<TeacherFindAllVo[]> {
-    return this.requestPostService.teacherFindAll(user);
+  findAllRequestPostTheTeacherManage(
+    @GetUser() user: User,
+  ): Promise<RequestPostWithStudentAndPostVo[]> {
+    return this.requestPostService.findAllRequestPostTheTeacherManage(user.id);
   }
 
   @ApiOperation({ description: '查询学生的岗位请求' })
   @Auth(RoleEnum.STUDENT)
   @Get('student')
-  studentFindAll(@GetUser() user: User): Promise<StudentFindAllVo> {
-    return this.requestPostService.studentFindAll(user);
+  findAllRequestPostTheStudentSubmit(
+    @GetUser() user: User,
+  ): Promise<RequestPostWithStudentAndPostVo[]> {
+    return this.requestPostService.findAllRequestPostTheStudentSubmit(user.id);
   }
 
   @Auth(RoleEnum.STUDENT)
