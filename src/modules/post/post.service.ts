@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './post.entity';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
@@ -11,9 +11,10 @@ import { Task } from '../tasks/task.entity';
 @Injectable()
 export class PostService {
   constructor(
-    private dataSource: DataSource,
     @InjectRepository(PostEntity)
     private postRepository: Repository<PostEntity>,
+    @InjectRepository(Task)
+    private taskRepo: Repository<Task>,
   ) {}
 
   async create(createPostDto: CreatePostDto, user: User) {
@@ -26,8 +27,12 @@ export class PostService {
     };
   }
 
-  findOne(postId: number) {
-    return this.postRepository.findOneBy({ id: postId });
+  async findOne(postId: number) {
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (!post) {
+      throw new BadRequestException('无此岗位');
+    }
+    return post;
   }
 
   findAll() {
@@ -61,58 +66,40 @@ export class PostService {
       });
   }
 
-  async findAllTaskInThePost(postId: number): Promise<{
-    taskData: Task[];
-    reportCount: number[];
-  }> {
-    const post = await this.postRepository.findOne({
-      where: { id: postId },
+  async findAllTaskInThePost(postId: number) {
+    const taskList = await this.taskRepo.find({
+      where: { targetPost: { id: postId } },
       relations: {
-        taskList: {
-          receivedReportList: true,
-        },
+        receivedReportList: true,
       },
     });
 
-    if (!post) {
-      return {
-        taskData: [],
-        reportCount: [],
-      };
-    }
-
-    return {
-      taskData: post.taskList,
-      reportCount: post.taskList.map((task) => {
-        return task.receivedReportList.length;
-      }),
-    };
-  }
-
-  async findAllTaskAndOneReport(postId: number, user: User) {
-    const post = await this.postRepository.findOne({
-      where: {
-        id: postId,
-        taskList: {
-          receivedReportList: {
-            user: { id: user.id },
-          },
-        },
-      },
-      relations: {
-        taskList: {
-          receivedReportList: {
-            user: true,
-          },
-        },
-      },
-    });
-
-    if (!post) {
+    if (taskList.length === 0) {
       return [];
     }
 
-    return post.taskList;
+    return taskList;
+  }
+
+  async findAllTaskAndOneReport(postId: number, user: User) {
+    const taskList = await this.taskRepo.find({
+      where: {
+        targetPost: { id: postId },
+      },
+      relations: {
+        receivedReportList: {
+          user: true,
+        },
+      },
+    });
+
+    taskList.forEach((task) => {
+      task.receivedReportList = task.receivedReportList.filter((report) => {
+        return report.user.id === user.id;
+      });
+    });
+
+    return taskList;
   }
 
   async delete(postId: number) {

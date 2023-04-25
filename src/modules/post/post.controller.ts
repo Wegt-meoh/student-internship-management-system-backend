@@ -9,9 +9,9 @@ import { User } from '../user/user.entity';
 import { SuccMessageReponseVo } from 'src/utils/vo/succ-message-response.vo';
 import { PostWithCreatedUserVo } from './vo/postWithCreatedUser.vo';
 import { UserResponseVo } from '../user/vo/userResponse.vo';
-import { FindAllTaskAndReportCountVo } from './vo/findAllTaskAndReportCount.vo';
 import { FindAllTaskAndOneReportVo } from './vo/findAllTaskAndOneReport.vo';
 import { PostResponseVo } from './vo/postResponse.vo';
+import { TaskWithReceivedReportVo } from '../tasks/vo/taskWithReceivedReport.vo';
 
 @ApiTags('Post')
 @Controller('post')
@@ -40,16 +40,22 @@ export class PostController {
     return this.postService.findAllStudentInThePost(+id);
   }
 
-  @ApiOperation({ description: '查询此岗位下的所有任务以及报告提交数量' })
-  @Auth()
+  @ApiOperation({
+    description:
+      '查询此岗位下的所有任务以及报告提交数量，教师进入岗位详情的时候用',
+  })
+  @Auth(RoleEnum.TEACHER)
   @Get('/find/all/task/:id')
   findAllTaskAndReportCount(
     @Param('id') id: string,
-  ): Promise<FindAllTaskAndReportCountVo> {
+  ): Promise<TaskWithReceivedReportVo[]> {
     return this.postService.findAllTaskInThePost(+id);
   }
 
-  @ApiOperation({ description: '查询此岗位下的所有任务以及当前用户的提交' })
+  @ApiOperation({
+    description:
+      '查询此岗位下的所有任务以及当前用户的提交，学生进入岗位详情列出所有任务的时候用',
+  })
   @Auth(RoleEnum.STUDENT)
   @Get('/find/all/task/and/one/report/:id')
   findAllTaskAndOneReport(

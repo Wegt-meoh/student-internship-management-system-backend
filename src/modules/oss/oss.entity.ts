@@ -46,7 +46,7 @@ export class OssEntity {
   @Column({ type: 'varchar', length: 200, comment: '文件存放位置' })
   public location: string;
 
-  @ApiProperty({ description: '上传时间' })
+  @ApiProperty({ description: '上传时间', example: '2023-04-24T18:46:42.017Z' })
   @CreateDateColumn({
     type: 'timestamp',
     name: 'create_date',

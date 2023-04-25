@@ -27,18 +27,22 @@ export class RequestPostService {
       throw new BadRequestException('岗位不存在');
     }
 
-    const pendingOrResolveRequest = await this.requestPostRepo.findOneBy([
-      {
-        targetPost: { id: postId },
-        status: RequestPostStatus.PEDING,
-      },
-      {
-        targetPost: { id: postId },
-        status: RequestPostStatus.RESOLVE,
-      },
-    ]);
-    if (pendingOrResolveRequest) {
+    const pendingRequest = await this.requestPostRepo.findOneBy({
+      targetPost: { id: postId },
+      requestUser: { id: user.id },
+      status: RequestPostStatus.PEDING,
+    });
+    if (pendingRequest) {
       throw new BadRequestException('岗位正在处理，请勿重复提交申请');
+    }
+
+    const resolveRequest = await this.requestPostRepo.findOneBy({
+      targetPost: { id: postId },
+      requestUser: { id: user.id },
+      status: RequestPostStatus.RESOLVE,
+    });
+    if (resolveRequest) {
+      throw new BadRequestException('岗位申请已通过，请勿重复申请');
     }
 
     await this.requestPostRepo.save(
@@ -65,6 +69,14 @@ export class RequestPostService {
   }
 
   async remove(id: number) {
+    const request = await this.requestPostRepo.findOneBy({ id });
+    if (!request) {
+      throw new BadRequestException('不存在此请求');
+    }
+    if (request.status === RequestPostStatus.RESOLVE) {
+      throw new BadRequestException('无法删除已通过的岗位请求');
+    }
+
     await this.requestPostRepo.remove(plainToInstance(RequestPost, { id }));
     return {
       message: '删除成功',

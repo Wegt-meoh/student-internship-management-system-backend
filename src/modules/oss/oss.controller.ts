@@ -20,6 +20,7 @@ import { GetUser } from 'src/decorators/get-user.decorator';
 import { createReadStream } from 'fs';
 import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { OssResponseVo } from './vo/ossResponse.vo';
 
 @ApiTags('OSS')
 @Controller('oss')
@@ -69,8 +70,8 @@ export class OssController {
 
   @Auth()
   @Get()
-  findByUser(@GetUser() user: User) {
-    return this.ossService.findByUser(user);
+  findByUser(): Promise<OssResponseVo[]> {
+    return this.ossService.findAll();
   }
 
   @Get('download/:id')
@@ -80,8 +81,6 @@ export class OssController {
     @Req() req: Request,
   ) {
     const ossUrl = this.ossDomain + req.path;
-    console.log(ossUrl);
-
     const ossEntity = await this.ossService.findOneByUrl(ossUrl);
 
     if (!ossEntity) {
