@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
 import { RequestPostStatus } from 'src/enums/RequestPostStatus.enum';
+import { Task } from '../tasks/task.entity';
 
 @Injectable()
 export class PostService {
@@ -23,6 +24,10 @@ export class PostService {
     return {
       message: '创建成功',
     };
+  }
+
+  findOne(postId: number) {
+    return this.postRepository.findOneBy({ id: postId });
   }
 
   findAll() {
@@ -56,11 +61,50 @@ export class PostService {
       });
   }
 
-  async findAllTaskInThePost(postId: number) {
+  async findAllTaskInThePost(postId: number): Promise<{
+    taskData: Task[];
+    reportCount: number[];
+  }> {
     const post = await this.postRepository.findOne({
       where: { id: postId },
       relations: {
-        taskList: true,
+        taskList: {
+          receivedReportList: true,
+        },
+      },
+    });
+
+    if (!post) {
+      return {
+        taskData: [],
+        reportCount: [],
+      };
+    }
+
+    return {
+      taskData: post.taskList,
+      reportCount: post.taskList.map((task) => {
+        return task.receivedReportList.length;
+      }),
+    };
+  }
+
+  async findAllTaskAndOneReport(postId: number, user: User) {
+    const post = await this.postRepository.findOne({
+      where: {
+        id: postId,
+        taskList: {
+          receivedReportList: {
+            user: { id: user.id },
+          },
+        },
+      },
+      relations: {
+        taskList: {
+          receivedReportList: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -69,5 +113,30 @@ export class PostService {
     }
 
     return post.taskList;
+  }
+
+  async delete(postId: number) {
+    await this.postRepository.remove(
+      plainToInstance(PostEntity, { id: postId }),
+    );
+
+    return {
+      message: '删除成功',
+    };
+  }
+
+  async findAllCreatePost(userId: number) {
+    return this.postRepository.find({ where: { createdUser: { id: userId } } });
+  }
+
+  async findAllJoinPost(userId: number) {
+    return this.postRepository.find({
+      where: {
+        requested: {
+          requestUser: { id: userId },
+          status: RequestPostStatus.RESOLVE,
+        },
+      },
+    });
   }
 }
