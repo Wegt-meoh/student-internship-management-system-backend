@@ -6,12 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { PostEntity } from '../post/post.entity';
 import { plainToInstance } from 'class-transformer';
+import { Report } from '../report/report.entity';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepo: Repository<Task>,
     @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
+    @InjectRepository(Report) private reportRepo: Repository<Report>,
   ) {}
 
   async create(createTaskDto: CreateTaskDto, user: User) {
@@ -54,5 +56,23 @@ export class TasksService {
     }
 
     return task.receivedReportList;
+  }
+
+  async remove(taskId: number) {
+    await this.taskRepo.remove(plainToInstance(Task, { id: taskId }));
+    return {
+      message: '删除成功',
+    };
+  }
+
+  findOne(taskId: number) {
+    return this.taskRepo.findOneBy({ id: taskId });
+  }
+
+  findReportByUser(taskId: number, userId: number) {
+    return this.reportRepo.findOneBy({
+      task: { id: taskId },
+      user: { id: userId },
+    });
   }
 }
