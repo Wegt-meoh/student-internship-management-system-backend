@@ -39,8 +39,8 @@ import { RequestPostModule } from './modules/requestPost/requstPostModule.module
     PostModule,
     RequestPostModule,
     ReportModule,
-    OssModule,
     TasksModule,
+    OssModule,
   ],
 })
 export class AppModule {}

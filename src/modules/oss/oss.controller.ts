@@ -6,6 +6,10 @@ import {
   UseInterceptors,
   Body,
   BadRequestException,
+  Header,
+  NotFoundException,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { OssService } from './oss.service';
 import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -13,11 +17,20 @@ import { User } from '../user/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Auth } from 'src/decorators/auth.decorator';
 import { GetUser } from 'src/decorators/get-user.decorator';
+import { createReadStream } from 'fs';
+import type { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('OSS')
 @Controller('oss')
 export class OssController {
-  constructor(private readonly ossService: OssService) {}
+  private ossDomain: string;
+  constructor(
+    private ossService: OssService,
+    private configService: ConfigService,
+  ) {
+    this.ossDomain = configService.get('OSS_DOMAIN');
+  }
 
   @ApiOperation({
     description: '文件上传单个',
@@ -58,5 +71,29 @@ export class OssController {
   @Get()
   findByUser(@GetUser() user: User) {
     return this.ossService.findByUser(user);
+  }
+
+  @Get('download/:id')
+  @Header('Content-Type', 'application/json')
+  async getStaticFile(
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
+  ) {
+    const ossUrl = this.ossDomain + req.path;
+    console.log(ossUrl);
+
+    const ossEntity = await this.ossService.findOneByUrl(ossUrl);
+
+    if (!ossEntity) {
+      throw new NotFoundException('no such file');
+    }
+
+    const file = createReadStream(ossEntity.location);
+
+    res.set({
+      'Content-Disposition': `attachment; filename="${ossEntity.fileName}"`,
+    });
+
+    file.pipe(res);
   }
 }

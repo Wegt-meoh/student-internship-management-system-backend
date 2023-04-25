@@ -66,12 +66,18 @@ export class OssService {
     ossObject.size = file.size;
     ossObject.type = file.mimetype;
     ossObject.userId = user.id;
+    ossObject.fileName = file.originalname;
 
     return this.ossReposotory.save(ossObject);
   }
 
   findAll() {
     return this.ossReposotory.find();
+  }
+
+  async findOneByUrl(url: string) {
+    const ossEntity = await this.ossReposotory.findOneBy({ url });
+    return ossEntity;
   }
 
   findByUser(user: User) {

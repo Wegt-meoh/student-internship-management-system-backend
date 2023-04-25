@@ -25,8 +25,11 @@ export class OssEntity {
   @Column({ type: 'int', comment: '文件size' })
   public size: number;
 
+  @Column()
+  fileName: string;
+
   @ApiProperty({ description: '文件mimetype类型' })
-  @Column({ type: 'varchar', length: 20, comment: '文件mimetype类型' })
+  @Column({ type: 'varchar', comment: '文件mimetype类型' })
   public type: string;
 
   @ApiProperty({
