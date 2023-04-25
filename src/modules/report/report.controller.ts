@@ -16,6 +16,7 @@ import { CreateReportDto } from './dto/create-report.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
 import { UpdateReportDto } from './dto/update-report.dto';
+import { ReportResponseVo } from './vo/reportResponse.vo';
 
 @ApiTags('Report')
 @Controller('report')
@@ -40,7 +41,7 @@ export class ReportController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<ReportResponseVo[]> {
     return this.reportService.findAll();
   }
 
