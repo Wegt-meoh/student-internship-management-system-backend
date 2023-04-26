@@ -1,8 +1,7 @@
 import { UserResponseVo } from 'src/modules/user/vo/userResponse.vo';
 import { RequestPostVo } from './requestPost.vo';
-import { PostResponseVo } from 'src/modules/post/vo/postResponse.vo';
 import { ApiProperty } from '@nestjs/swagger';
-import { PostWithCreatedUserVo } from 'src/modules/post/vo/postWithCreatedUser.vo';
+import { PostResponseVo } from 'src/modules/post/vo/postResponse.vo';
 
 export class RequestPostWithStudentAndPostVo extends RequestPostVo {
   @ApiProperty({
@@ -11,7 +10,7 @@ export class RequestPostWithStudentAndPostVo extends RequestPostVo {
   requestUser: UserResponseVo;
 
   @ApiProperty({
-    type: PostWithCreatedUserVo,
+    type: PostResponseVo,
   })
-  targetPost: PostWithCreatedUserVo;
+  targetPost: PostResponseVo;
 }

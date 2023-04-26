@@ -17,6 +17,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../user/user.entity';
 import { RequestPostWithStudentAndPostVo } from './vo/requestPostWithStudentAndPost.vo';
+import { FindAllRequestPostTheStudentSubmitVo } from './vo/findAllRequestPostTheStudentSubmit.vo';
 
 @ApiTags('RequestPost')
 @Controller('/request/post')
@@ -50,12 +51,12 @@ export class RequestPostController {
     return this.requestPostService.findAllRequestPostTheTeacherManage(user.id);
   }
 
-  @ApiOperation({ description: '查询学生的岗位请求' })
+  @ApiOperation({ description: '查询学生的岗位申请' })
   @Auth(RoleEnum.STUDENT)
   @Get('student')
   findAllRequestPostTheStudentSubmit(
     @GetUser() user: User,
-  ): Promise<RequestPostWithStudentAndPostVo[]> {
+  ): Promise<FindAllRequestPostTheStudentSubmitVo[]> {
     return this.requestPostService.findAllRequestPostTheStudentSubmit(user.id);
   }
 

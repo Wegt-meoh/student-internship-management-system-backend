@@ -10,6 +10,8 @@ import {
   NotFoundException,
   Req,
   Res,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { OssService } from './oss.service';
 import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -58,7 +60,16 @@ export class OssController {
   @Auth()
   @Post()
   create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({
+          maxSize: 100 * 1024 * 1024,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
     @Body('comment') comment: string,
     @GetUser() user: User,
   ) {
@@ -74,7 +85,7 @@ export class OssController {
     return this.ossService.findAll();
   }
 
-  @Get('download/:id')
+  @Get('/download/:id')
   @Header('Content-Type', 'application/json')
   async getStaticFile(
     @Res({ passthrough: true }) res: Response,

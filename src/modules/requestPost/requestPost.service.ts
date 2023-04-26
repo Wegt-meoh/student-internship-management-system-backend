@@ -59,6 +59,16 @@ export class RequestPostService {
 
   async update(updateRequestPostDto: UpdateRequestPostDto) {
     const { id, status } = updateRequestPostDto;
+
+    const requestPost = await this.requestPostRepo.findOneBy({ id });
+    if (!requestPost) {
+      throw new BadRequestException('无此岗位请求');
+    }
+
+    if (requestPost.status !== RequestPostStatus.PEDING) {
+      throw new BadRequestException('无法更新已完成请求');
+    }
+
     await this.requestPostRepo.save(
       plainToInstance(RequestPost, { id, status }),
     );

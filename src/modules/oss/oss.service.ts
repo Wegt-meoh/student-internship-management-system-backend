@@ -60,7 +60,7 @@ export class OssService {
     });
 
     const ossObject = new OssEntity();
-    ossObject.url = `${this.ossDomain}/${this.ossServerRoot}/${stroedFileName}`;
+    ossObject.url = `${this.ossDomain}${this.ossServerRoot}/${stroedFileName}`;
     ossObject.comment = comment;
     ossObject.location = storedFilePath;
     ossObject.size = file.size;
