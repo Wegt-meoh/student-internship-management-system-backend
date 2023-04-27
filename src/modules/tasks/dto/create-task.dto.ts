@@ -33,5 +33,5 @@ export class CreateTaskDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  attachmentUrl: string;
+  attachmentUrl: string | null;
 }

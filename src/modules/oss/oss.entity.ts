@@ -38,9 +38,10 @@ export class OssEntity {
   @Column({
     type: 'varchar',
     length: 200,
+    nullable: true,
     comment: '业务描述字段，可以字符串，也可以是 JSON 字符串',
   })
-  public comment: string;
+  public comment: string | null;
 
   @Exclude({ toPlainOnly: true }) // 输出屏蔽
   @Column({ type: 'varchar', length: 200, comment: '文件存放位置' })

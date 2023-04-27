@@ -52,6 +52,7 @@ export class OssController {
           description: '上传文件描述，可以是纯字符串，也可以是JSON字符串',
           type: 'string',
           format: 'text',
+          nullable: true,
         },
       },
     },

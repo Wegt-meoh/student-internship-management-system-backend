@@ -22,7 +22,7 @@ export class Task {
   description: string;
 
   @Column({ name: 'attachment_url', nullable: true })
-  attachmentUrl: string;
+  attachmentUrl: string | null;
 
   @CreateDateColumn({
     type: 'timestamp',
