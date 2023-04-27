@@ -60,7 +60,7 @@ export class TasksController {
   findReportByUserInTheTask(
     @Param('id') id: string,
     @GetUser() user: User,
-  ): Promise<ReportResponseVo> {
+  ): Promise<ReportResponseVo[]> {
     return this.tasksService.findReportByUser(+id, user.id);
   }
 }

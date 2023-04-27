@@ -70,7 +70,7 @@ export class TasksService {
   }
 
   findReportByUser(taskId: number, userId: number) {
-    return this.reportRepo.findOneBy({
+    return this.reportRepo.findBy({
       task: { id: taskId },
       user: { id: userId },
     });
