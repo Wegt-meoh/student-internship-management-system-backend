@@ -12,6 +12,7 @@ import {
   Res,
   ParseFilePipeBuilder,
   HttpStatus,
+  StreamableFile,
 } from '@nestjs/common';
 import { OssService } from './oss.service';
 import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -105,6 +106,6 @@ export class OssController {
       'Content-Disposition': `attachment; filename="${ossEntity.fileName}"`,
     });
 
-    file.pipe(res);
+    return new StreamableFile(file);
   }
 }

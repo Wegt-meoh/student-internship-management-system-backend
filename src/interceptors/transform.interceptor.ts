@@ -10,6 +10,9 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>) {
+    if (context.getHandler().name === 'getStaticFile') {
+      return next.handle();
+    }
     return next.handle().pipe(map((data) => instanceToPlain(data)));
   }
 }

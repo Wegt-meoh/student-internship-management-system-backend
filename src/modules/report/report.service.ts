@@ -23,6 +23,14 @@ export class ReportService {
       throw new BadRequestException('任务不存在');
     }
 
+    const reportExist = await this.reportRepo.findOneBy({
+      task: { id: taskId },
+      user: { id: user.id },
+    });
+    if (reportExist) {
+      throw new BadRequestException('报告已存在，请勿重复提交');
+    }
+
     await this.reportRepo.save(
       plainToInstance(Report, { attachmentUrl, task: taskExist, user }),
     );
