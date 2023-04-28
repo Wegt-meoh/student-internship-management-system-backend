@@ -1,22 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { RoleEnum } from 'src/enums/Role.enum';
+import { PickType } from '@nestjs/swagger';
+import { User } from '../user.entity';
 
-export class UserResponseVo {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  phone: string;
-
-  @ApiProperty({ nullable: true })
-  facuties: string | null;
-
-  @ApiProperty({ nullable: true })
-  class: string | null;
-
-  @ApiProperty()
-  role: RoleEnum;
-}
+export class UserResponseVo extends PickType(User, [
+  'attachmentUrl',
+  'class',
+  'description',
+  'facuties',
+  'id',
+  'name',
+  'phone',
+  'role',
+]) {}

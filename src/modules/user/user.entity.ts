@@ -26,6 +26,12 @@ export class User {
   @Column({ nullable: true })
   facuties: string | null;
 
+  @Column({ nullable: true })
+  description: string | null;
+
+  @Column({ nullable: true })
+  attachmentUrl: string | null;
+
   @Exclude({ toPlainOnly: true })
   @Column()
   password: string;

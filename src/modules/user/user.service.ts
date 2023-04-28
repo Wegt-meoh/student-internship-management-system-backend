@@ -6,6 +6,8 @@ import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { plainToInstance } from 'class-transformer';
 import { SearchUserDto } from './dto/search-user.dto';
+import { UpdateUserInfoDto } from './dto/update-user.dto';
+import { UpdateUserPasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -35,5 +37,34 @@ export class UserService {
 
   async search(searchUserDto: SearchUserDto) {
     return this.userRepository.findBy(searchUserDto);
+  }
+
+  async updateInfo(updateUserDto: UpdateUserInfoDto, userId: number) {
+    const { description, attachmentUrl } = updateUserDto;
+    await this.userRepository.save(
+      plainToInstance(User, { id: userId, description, attachmentUrl }),
+    );
+
+    return {
+      message: '更新成功',
+    };
+  }
+
+  async updatePassword(updateDto: UpdateUserPasswordDto, user: User) {
+    const { password, newPassword } = updateDto;
+    if (await bcrypt.compare(password, user.password)) {
+      await this.userRepository.save(
+        plainToInstance(User, {
+          id: user.id,
+          password: await bcrypt.hash(newPassword, 10),
+        }),
+      );
+
+      return {
+        message: '密码修改成功',
+      };
+    } else {
+      throw new BadRequestException('原密码输入错误');
+    }
   }
 }
