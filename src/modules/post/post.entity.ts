@@ -26,6 +26,9 @@ export class PostEntity {
   @Column()
   company: string;
 
+  @Column()
+  description: string;
+
   @OneToMany(() => Task, (task) => task.targetPost)
   taskList: Task[];
 

@@ -13,4 +13,8 @@ export class CreatePostDto {
   @ApiProperty()
   @IsString()
   company: string;
+
+  @ApiProperty()
+  @IsString()
+  description: string;
 }
