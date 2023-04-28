@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Auth } from 'src/decorators/auth.decorator';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,9 +16,15 @@ import { UpdateUserPasswordDto } from './dto/update-password.dto';
 export class UserController {
   constructor(private userService: UserService) {}
   @Auth()
-  @Get('info')
-  async info(@GetUser() user: User): Promise<UserResponseVo> {
+  @Get('/info')
+  async getSelfInfo(@GetUser() user: User): Promise<UserResponseVo> {
     return user;
+  }
+
+  @Auth()
+  @Get('/info/:id')
+  async getInfoById(@Param('id') id: string): Promise<UserResponseVo> {
+    return this.userService.findOneById(+id);
   }
 
   @Auth(RoleEnum.STUDENT)

@@ -15,6 +15,15 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  async findOneById(userId: number) {
+    const exist = await this.userRepository.findOneBy({ id: userId });
+    if (!exist) {
+      throw new BadRequestException('用户不存在');
+    }
+
+    return exist;
+  }
+
   async create(createUserDto: CreateUserDto) {
     const exist = await this.userRepository.findOneBy({
       phone: createUserDto.phone,
