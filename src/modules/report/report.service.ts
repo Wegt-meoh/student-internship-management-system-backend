@@ -46,6 +46,11 @@ export class ReportService {
 
   async update(updateReportDto: UpdateReportDto) {
     const { id, score } = updateReportDto;
+    const report = await this.reportRepo.findOneBy({ id });
+    if (!report) {
+      throw new BadRequestException('报告不存在');
+    }
+
     await this.reportRepo.save(plainToInstance(Report, { id, score }));
     return {
       message: '评分成功',
@@ -53,6 +58,11 @@ export class ReportService {
   }
 
   async delete(id: number) {
+    const report = await this.reportRepo.findOneBy({ id });
+    if (!report && !report.score) {
+      throw new BadRequestException('报告已经评分完成，无法修改');
+    }
+
     await this.reportRepo.remove(plainToInstance(Report, { id }));
     return {
       message: '删除成功',
