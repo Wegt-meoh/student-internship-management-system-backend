@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   UploadedFile,
@@ -77,6 +78,9 @@ export class OssService {
 
   async findOneByUrl(url: string) {
     const ossEntity = await this.ossReposotory.findOneBy({ url });
+    if (!ossEntity) {
+      throw new BadRequestException('找不到此文件');
+    }
     return ossEntity;
   }
 
