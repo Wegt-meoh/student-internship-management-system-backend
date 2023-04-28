@@ -31,12 +31,12 @@ export class Task {
   })
   createDate: Date;
 
-  @ManyToOne(() => User, (user) => user.taskList)
+  @ManyToOne(() => User, (user) => user.taskList, { onDelete: 'CASCADE' })
   createdUser: User;
 
-  @ManyToOne(() => PostEntity, (post) => post.taskList)
+  @ManyToOne(() => PostEntity, (post) => post.taskList, { onDelete: 'CASCADE' })
   targetPost: PostEntity;
 
-  @OneToMany(() => Report, (report) => report.task)
+  @OneToMany(() => Report, (report) => report.task, { cascade: ['remove'] })
   receivedReportList: Report[];
 }

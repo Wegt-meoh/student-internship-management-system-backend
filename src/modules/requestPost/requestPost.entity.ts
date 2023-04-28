@@ -8,10 +8,12 @@ export class RequestPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.requestPost)
+  @ManyToOne(() => User, (user) => user.requestPost, { onDelete: 'CASCADE' })
   requestUser: User;
 
-  @ManyToOne(() => PostEntity, (post) => post.requested)
+  @ManyToOne(() => PostEntity, (post) => post.requested, {
+    onDelete: 'CASCADE',
+  })
   targetPost: PostEntity;
 
   @Column({ default: RequestPostStatus.PEDING })

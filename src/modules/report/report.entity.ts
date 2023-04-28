@@ -13,10 +13,12 @@ export class Report {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.reportList)
+  @ManyToOne(() => User, (user) => user.reportList, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Task, (task) => task.receivedReportList)
+  @ManyToOne(() => Task, (task) => task.receivedReportList, {
+    onDelete: 'CASCADE',
+  })
   task: Task;
 
   @Column({ comment: 'oss url', name: 'attachment_url' })

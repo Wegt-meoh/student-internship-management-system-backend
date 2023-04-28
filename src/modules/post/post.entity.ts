@@ -20,7 +20,7 @@ export class PostEntity {
   @Column()
   position: string;
 
-  @ManyToOne(() => User, (user) => user.createPostList)
+  @ManyToOne(() => User, (user) => user.createPostList, { onDelete: 'CASCADE' })
   createdUser: User;
 
   @Column()
