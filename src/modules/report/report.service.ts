@@ -59,7 +59,7 @@ export class ReportService {
 
   async delete(id: number) {
     const report = await this.reportRepo.findOneBy({ id });
-    if (!report && !report.score) {
+    if (report && report.score) {
       throw new BadRequestException('报告已经评分完成，无法修改');
     }
 
