@@ -65,8 +65,12 @@ export class TasksService {
     };
   }
 
-  findOne(taskId: number) {
-    return this.taskRepo.findOneBy({ id: taskId });
+  async findOne(taskId: number) {
+    const task = await this.taskRepo.findOneBy({ id: taskId });
+    if (!task) {
+      throw new BadRequestException('无此任务');
+    }
+    return task;
   }
 
   findReportByUser(taskId: number, userId: number) {
